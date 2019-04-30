@@ -22,7 +22,7 @@ export default {
         Sat: 0,
         Sun: 0
       },
-      text: '最近七天订单变化图',
+      text: '本周订单一览表',
       subtext: ''
     }
   },

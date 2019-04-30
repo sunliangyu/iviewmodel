@@ -74,6 +74,7 @@ export default {
         this.inforCardData[3].count = res.refuse
         this.inforCardData[4].count = res.nodo
       })
+      this.hasread = true
     }
   },
   mounted () {
