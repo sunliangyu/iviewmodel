@@ -68,6 +68,7 @@ export default {
     }
   },
   mounted () {
+    this.inforCardData[0].count = 999
     //
   }
 }

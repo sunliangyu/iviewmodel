@@ -25,40 +25,55 @@
           <MenuItem  v-for="item in messageList" :name="item.msg_id" :key="`msg_${item.msg_id}`">
             <div>
               <p class="msg-title">{{ item.title }}</p>
-              <Button
-                style="float: right;margin-right: 10px;"
-                :style="{ display: item.loading ? 'inline-block !important' : '' }"
-                :loading="item.loading"
-                size="small"
-                title="接单"
-                type="success"
-                v-show="currentMessageType === 'unread'"
-                @click.native.stop="receiveOrder(item)">
-                <Icon type="ios-arrow-forward"></Icon>
-                接单
-              </Button>
-              <Button
-                style="float: left;margin-left: 10px;"
-                :style="{ display: item.loading ? 'inline-block !important' : '' }"
-                :loading="item.loading"
-                size="small"
-                title="拒单"
-                type="error"
-                v-show="currentMessageType === 'unread'"
-                @click.native.stop="refuseOrder(item)">
-                <Icon type="ios-arrow-back"></Icon>拒单
-              </Button>
+              <Badge status="default" :text="item.create_time" />
             </div>
           </MenuItem>
         </Menu>
       </div>
-      <div class="message-page-con message-view-con">
+      <div class="message-page-con message-view-con"   v-show=" display ===  true ">
         <Spin fix v-if="contentLoading" size="large"></Spin>
         <div class="message-view-header">
           <h2 class="message-view-title">{{ showingMsgItem.title }}</h2>
           <time class="message-view-time">{{ showingMsgItem.create_time }}</time>
         </div>
-        <div v-html="messageContent"></div>
+        <div>{{ messageContent.location }}</div>
+        <div>共计{{ messageContent.people }}人用餐</div>
+        <div>价格总计{{ messageContent.price }}元</div>
+        <div>菜品：{{messageContent.foods}} </div>
+        <div v-show=" messageContent.reason != null">
+          拒绝理由{{messageContent.reason}}
+        </div>
+        <br> <br> <br> <br> <br>
+        <div v-show="currentMessageType === 'unread'  "   >
+          <Button
+            style="float: right;margin-right: 10px;"
+            :style="{ display: showingMsgItem.loading ? 'inline-block !important' : '' }"
+            :loading="showingMsgItem.loading"
+            size="small"
+            title="接单"
+            type="success"
+            @click.native.stop="receiveOrder(showingMsgItem)">
+            <Icon type="ios-arrow-forward"></Icon>
+            接单
+          </Button>
+          <Button
+            style="float: left;margin-left: 10px;"
+            :style="{ display: showingMsgItem.loading ? 'inline-block !important' : '' }"
+            :loading="showingMsgItem.loading"
+            size="small"
+            title="拒单"
+            type="error"
+            @click.native.stop="modal6 = true">
+            <Icon type="ios-arrow-back"></Icon>拒单
+          </Button>
+          <Modal
+            v-model="modal6"
+            title="请填写拒绝理由"
+            @on-ok="refuseOrder(showingMsgItem)"
+            @on-cancel="cancel">
+            <Input v-model="refusereason" placeholder="Enter something..." style="width: 300px" />
+          </Modal>
+        </div>
       </div>
     </div>
   </Card>
@@ -66,7 +81,6 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import { getRes, getToken } from '../../../libs/util'
 const listDic = {
   unread: 'orderUnreadList',
   receive: 'orderReceiveList',
@@ -79,8 +93,11 @@ export default {
       listLoading: true,
       contentLoading: false,
       currentMessageType: 'unread',
-      messageContent: '',
-      showingMsgItem: {}
+      messageContent: {},
+      showingMsgItem: {},
+      display: false,
+      modal6: false,
+      refusereason: ''
     }
   },
   computed: {
@@ -112,21 +129,19 @@ export default {
       'hasRead',
       'receiveOrders',
       'refuseOrders',
-      'rceiveText',
-      'getOrderById'
+      'getOrderContentByMsgId'
     ]),
     stopLoading (name) {
       this[name] = false
     },
     handleSelect (name) {
+      this.display = false
       this.currentMessageType = name
     },
     handleView (msg_id) {
       this.contentLoading = true
-      var resid = getRes()
-      var token = getToken()
-      alert('userid:' + userid + 'token:' + token)
-      this.getOrderById({ msg_id, resid, token }).then(content => {
+      this.display = true
+      this.getOrderContentByMsgId(msg_id).then(content => {
         this.messageContent = content
         const item = this.messageList.find(item => item.msg_id === msg_id)
         if (item) this.showingMsgItem = item
@@ -138,21 +153,22 @@ export default {
     receiveOrder (item) {
       item.loading = true
       const msg_id = item.msg_id
-      const operate = '1'
-      alert(item.toString() + '1')
-      this.rceiveText(msg_id, operate)
+      this.receiveOrders(msg_id)
+      item.loading = false
+      this.display = false
     },
     refuseOrder (item) {
-      const operate = '2'
+      const reason = this.refusereason
       item.loading = true
       const msg_id = item.msg_id
-      this.rceiveText(msg_id, operate)
+      this.refuseOrders({ msg_id, reason })
+      item.loading = false
+      this.display = false
     }
   },
   mounted () {
     this.listLoading = true
-    // 请求获取消息列表
-    this.listLoading = false
+    this.getOrders().then(() => this.stopLoading('listLoading')).catch(() => this.stopLoading('listLoading'))
   }
 }
 </script>

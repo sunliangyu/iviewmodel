@@ -4,9 +4,7 @@ import {
   getUserInfo,
   getMessage,
   getContentByMsgId,
-  hasRead,
-  removeReaded,
-  restoreTrash,
+  alertmessage,
   getUnreadCount
 } from '@/api/user'
 import {
@@ -88,15 +86,14 @@ export default {
       state.messageContentStore[msg_id] = content
     },
     moveMsg (state, { from, to, msg_id }) {
-      alert('from ' + from + 'to : ' + to)
       const index = state[from].findIndex(_ => _.msg_id === msg_id)
       const msgItem = state[from].splice(index, 1)[0]
       msgItem.loading = false
       state[to].unshift(msgItem)
     },
     // 更新当前订单信息
-    updateOrder (state, content) {
-      state.orderContentStore.push(content)
+    updateOrder (state, { order, content }) {
+      state.orderContentStore[order] = content
     }
   },
   getters: {
@@ -121,7 +118,6 @@ export default {
         }).then(res => {
           const data = res.data
           if (data.token == null) {
-            alert(data.message)
             resolve()
           } else {
             commit('setToken', data.token)
@@ -149,7 +145,6 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           var token = getToken()
-          alert('token:' + token)
           getUserInfo(token).then(res => {
             const data = res.data
             if (data.user_id == null) {
@@ -186,9 +181,6 @@ export default {
       return new Promise((resolve, reject) => {
         getMessage(state.restaurant).then(res => {
           const { unread, readed, trash } = res.data
-          alert(unread.toString())
-          var time = new Date(1472048779952)
-          alert(time)
           commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
           commit('setMessageReadedList', readed.map(_ => {
             _.loading = false
@@ -213,8 +205,7 @@ export default {
         } else {
           var restaurant = state.restaurant
           getContentByMsgId(restaurant, msg_id).then(res => {
-            const content = res.data
-            alert(content)
+            const content = res.data.message
             commit('updateMessageContentStore', { msg_id, content })
             resolve(content)
           })
@@ -223,8 +214,10 @@ export default {
     },
     // 把一个未读消息标记为已读
     hasRead ({ state, commit }, { msg_id }) {
+      var restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        hasRead(msg_id).then(() => {
+        var state = 'b'
+        alertmessage(restaurant, msg_id, state).then(() => {
           commit('moveMsg', {
             from: 'messageUnreadList',
             to: 'messageReadedList',
@@ -238,9 +231,11 @@ export default {
       })
     },
     // 删除一个已读消息到回收站
-    removeReaded ({ commit }, { msg_id }) {
+    removeReaded ({ state, commit }, { msg_id }) {
+      var restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        removeReaded(msg_id).then(() => {
+        var state = 'c'
+        alertmessage(restaurant, msg_id, state).then(() => {
           commit('moveMsg', {
             from: 'messageReadedList',
             to: 'messageTrashList',
@@ -253,9 +248,11 @@ export default {
       })
     },
     // 还原一个已删除消息到已读消息
-    restoreTrash ({ commit }, { msg_id }) {
+    restoreTrash ({ state, commit }, { msg_id }) {
+      var restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        restoreTrash(msg_id).then(() => {
+        var state = 'b'
+        alertmessage(restaurant, msg_id, state).then(() => {
           commit('moveMsg', {
             from: 'messageTrashList',
             to: 'messageReadedList',
@@ -269,10 +266,10 @@ export default {
     },
     // 接受操作
     receiveOrders: function ({ commit, state }, msg_id) {
-      const token = state.token
-      const operate = '1'
+      const operate = 'b'
+      const restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        operateOrder(msg_id, token, operate).then(
+        operateOrder(msg_id, restaurant, operate, null).then(
           () => {
             commit('moveMsg', {
               from: 'orderUnreadList',
@@ -289,12 +286,12 @@ export default {
       }
       )
     },
-    refuseOrders: function ({ commit, state }, msg_id) {
-      const token = state.token
-      const operate = '2'
-      this.$axios.post()
+    refuseOrders: function ({ commit, state }, { msg_id, reason }) {
+      alert(reason)
+      const operate = 'c'
+      const restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        operateOrder(msg_id, token, operate).then(
+        operateOrder(msg_id, restaurant, operate, reason).then(
           () => {
             commit('moveMsg', {
               from: 'orderUnreadList',
@@ -309,25 +306,28 @@ export default {
       )
     },
     // 根据当前订单点击的消息的id获取内容
-    getOrderContentByMsgId: function ({ state, commit }, { msg_id }) {
+    getOrderContentByMsgId: function ({ commit, state }, order) {
       return new Promise((resolve, reject) => {
-        getOrderById(msg_id, state.restaurant).then(res => {
-          const content = res.data
+        let content = state.orderContentStore[order]
+        if (content) {
           resolve(content)
-        })
+        } else {
+          getOrderById(order, state.restaurant).then(res => {
+            const content = res.data
+            commit('updateOrder', { order, content })
+            resolve(content)
+          })
+        }
       })
     },
-    rceiveText: function ({ commit, state }, msg_id) {
-      commit('moveMsg', {
-        from: 'messageUnreadList',
-        to: 'messageReadedList',
-        msg_id
-      })
-    },
+    // 获取今天处理订单以及未处理订单
     getOrders: function ({ commit, state }, user_id) {
       return new Promise((resolve, reject) => {
-        getOrders(user_id).then(res => {
-          const { unread, receive, refuse } = res.data
+        getOrders(state.restaurant).then(res => {
+          var data = res.data
+          const unread = data.unread
+          const receive = data.receive
+          const refuse = data.refuse
           commit('setOrderUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
           commit('setOrderReceiveList', receive.map(_ => {
             _.loading = false

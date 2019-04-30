@@ -20,7 +20,6 @@ export default {
       var test = this.$store.state.user.unreadCount
       this.$store.state.user.unreadCount = 7
       test = this.$store.state.user.unreadCount
-      alert('this.$store.state.user.unreadCount777:' + test)
       var token = getToken()
       // this.$axios.get(this.HOME + '/?fr=hmpage').then(res => {
       //   console.log(res)

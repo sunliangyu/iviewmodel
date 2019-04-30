@@ -40,7 +40,7 @@
           </MenuItem>
         </Menu>
       </div>
-      <div class="message-page-con message-view-con">
+      <div class="message-page-con message-view-con" v-show="display === true">
         <Spin fix v-if="contentLoading" size="large"></Spin>
         <div class="message-view-header">
           <h2 class="message-view-title">{{ showingMsgItem.title }}</h2>
@@ -67,7 +67,8 @@ export default {
       contentLoading: false,
       currentMessageType: 'unread',
       messageContent: '',
-      showingMsgItem: {}
+      showingMsgItem: {},
+      display: false
     }
   },
   computed: {
@@ -105,10 +106,12 @@ export default {
       this[name] = false
     },
     handleSelect (name) {
+      this.display = false
       this.currentMessageType = name
     },
     handleView (msg_id) {
       this.contentLoading = true
+      this.display = true
       this.getContentByMsgId({ msg_id }).then(content => {
         this.messageContent = content
         const item = this.messageList.find(item => item.msg_id === msg_id)
@@ -124,6 +127,7 @@ export default {
       const msg_id = item.msg_id
       if (this.currentMessageType === 'readed') this.removeReaded({ msg_id })
       else this.restoreTrash({ msg_id })
+      this.display = false
     }
   },
   mounted () {

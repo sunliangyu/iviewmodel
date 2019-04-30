@@ -52,7 +52,7 @@ export default [
   },
   {
     path: '/message',
-    name: '通知',
+    name: 'inform',
     component: Main,
     meta: {
       //  hideInBread: true,  hideInMenu: false,
@@ -91,7 +91,7 @@ export default [
     children: [
       {
         path: 'add',
-        name: '添加物品',
+        name: 'add_material',
         meta: {
           icon: 'ios-hammer',
           title: '添加物品'
@@ -100,7 +100,7 @@ export default [
       },
       {
         path: 'inquire',
-        name: '查询物品',
+        name: 'inquire_material',
         meta: {
           icon: 'ios-hammer',
           title: '查询物品'

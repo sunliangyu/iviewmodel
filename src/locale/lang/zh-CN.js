@@ -41,5 +41,8 @@ export default {
   org_tree_page: '组织结构树',
   drag_drawer_page: '可拖动抽屉',
   tree_select_page: '树状下拉选择器',
-  meterials: '物品管理查询'
+  meterials: '物品管理查询',
+  inform: '通知',
+  add_material: '添加物品',
+  inquire_material: '查询物品'
 }

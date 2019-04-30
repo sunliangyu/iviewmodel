@@ -1,38 +1,40 @@
 import axios from '@/libs/api.request'
 
 // 拒绝或接受订单
-export const operateOrder = (order, token, operate) => {
+export const operateOrder = (order, restaurant, operate, reason) => {
   return axios.request({
-    url: 'order/receive',
+    url: 'client/order/alertOrder',
     method: 'post',
+    timeout: 1000 * 60 * 2,
     data: {
       order,
-      token,
-      operate
+      operate,
+      restaurant,
+      reason
     }
   })
 }
 
 // 获取订单详细信息
-export const getOrderById = (order, token, resid) => {
+export const getOrderById = (order, restaurant) => {
   return axios.request({
-    url: 'order/getById',
-    method: 'post',
-    data: {
+    url: 'client/order/getOrderById',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
       order,
-      token,
-      resid
+      restaurant
     }
   })
 }
 // 获取未处理订单以及当天拒绝订单
-export const getOrders = (token, resid) => {
+export const getOrders = (restaurant) => {
   return axios.request({
-    url: 'order/getOrders',
-    method: 'post',
-    data: {
-      token,
-      resid
+    url: 'client/order/getOrder',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant
     }
   })
 }
