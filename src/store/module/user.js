@@ -10,7 +10,10 @@ import {
 import {
   getOrders,
   getOrderById,
-  operateOrder
+  operateOrder,
+  getHome,
+  getPie,
+  getBar
 } from '@/api/order'
 import { setToken, getToken } from '@/libs/util'
 
@@ -342,7 +345,33 @@ export default {
           reject(error)
         })
       })
+    },
+    getHome: ({ commit, state }) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getHome(restaurant).then(res => {
+          const data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getpie: ({ commit, state }) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getPie(restaurant).then(res => {
+          const data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getBar: ({ commit, state }) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getBar(restaurant).then(res => {
+          const data = res.data
+          resolve(data)
+        })
+      })
     }
-
   }
 }

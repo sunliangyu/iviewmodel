@@ -38,3 +38,37 @@ export const getOrders = (restaurant) => {
     }
   })
 }
+
+// 获取home页的参数
+export const getHome = (restaurant) => {
+  return axios.request({
+    url: 'client/order/getOrderCount',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant
+    }
+  })
+}
+// 获取pie元素的参数
+export const getPie = (restaurant) => {
+  return axios.request({
+    url: 'client/order/getOrderall',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant
+    }
+  })
+}
+
+export const getBar = (restaurant) => {
+  return axios.request({
+    url: 'client/order/getBar',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant
+    }
+  })
+}

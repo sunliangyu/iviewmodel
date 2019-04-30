@@ -8,15 +8,15 @@
         </infor-card>
       </i-col>
     </Row>
-    <Row :gutter="20" style="margin-top: 10px;">
+    <Row  :gutter="20" style="margin-top: 10px;">
       <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
         <Card shadow>
-          <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
+          <chart-pie style="height: 300px;" ></chart-pie>
         </Card>
       </i-col>
       <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
         <Card shadow>
-          <chart-bar style="height: 300px;" :value="barData" text="每周用户活跃量"/>
+          <chart-bar style="height: 300px;" :value="barData" text="每周订单量"/>
         </Card>
       </i-col>
     </Row>
@@ -33,6 +33,7 @@ import InforCard from '_c/info-card'
 import CountTo from '_c/count-to'
 import { ChartPie, ChartBar } from '_c/charts'
 import Example from './example.vue'
+import { mapMutations, mapActions } from 'vuex'
 export default {
   name: 'home',
   components: {
@@ -45,30 +46,38 @@ export default {
   data () {
     return {
       inforCardData: [
-        { title: '新增用户', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '今日到店订单', icon: 'md-locate', count: 232, color: '#19be6b' },
-        { title: '今日金额', icon: 'md-help-circle', count: 142, color: '#ff9900' },
-        { title: '今日外卖', icon: 'md-share', count: 657, color: '#ed3f14' },
-        { title: '今日拒单', icon: 'md-chatbubbles', count: 12, color: '#E46CBB' },
-        { title: '今日物品支出', icon: 'md-map', count: 14, color: '#9A66E4' }
-      ],
-      pieData: [
-        { value: 335, name: '外卖' },
-        { value: 310, name: '到店' }
+        { title: '今日总订单数', icon: 'md-person-add', count: 0, color: '#19be6b' },
+        { title: '今日收入金额', icon: 'md-help-circle', count: 0, color: '#ff9900' },
+        { title: '今日已接订单', icon: 'md-share', count: 0, color: '#ed3f14' },
+        { title: '今日已拒订单', icon: 'md-chatbubbles', count: 0, color: '#E46CBB' },
+        { title: '今日未处理订单', icon: 'md-map', count: 0, color: '#9A66E4' }
       ],
       barData: {
-        Mon: 13253,
-        Tue: 34235,
-        Wed: 26321,
-        Thu: 12340,
-        Fri: 24643,
-        Sat: 1322,
-        Sun: 1324
-      }
+      },
+      hasread: false
+    }
+  },
+  methods: {
+    ...mapMutations([
+      //
+    ]),
+    ...mapActions([
+      'getHome'
+    ])
+  },
+  created () {
+    if (!this.hasread) {
+      this.getHome().then(res => {
+        this.inforCardData[0].count = res.all
+        this.inforCardData[1].count = res.count
+        this.inforCardData[2].count = res.receive
+        this.inforCardData[3].count = res.refuse
+        this.inforCardData[4].count = res.nodo
+      })
     }
   },
   mounted () {
-    this.inforCardData[0].count = 999
+
     //
   }
 }
