@@ -153,7 +153,9 @@ export default {
     receiveOrder (item) {
       item.loading = true
       const msg_id = item.msg_id
-      this.receiveOrders(msg_id)
+      this.receiveOrders(msg_id).then(() => {
+        this.$Message.success('接单成功')
+      })
       item.loading = false
       this.display = false
     },
@@ -161,7 +163,11 @@ export default {
       const reason = this.refusereason
       item.loading = true
       const msg_id = item.msg_id
-      this.refuseOrders({ msg_id, reason })
+      this.refuseOrders({ msg_id, reason }).then(() => {
+        this.$store.state.user.orderContentStore[msg_id] = null
+        console.log(this.$store.state.user.orderContentStore)
+        this.$Message.warning('你拒绝了一个订单')
+      })
       item.loading = false
       this.display = false
     }

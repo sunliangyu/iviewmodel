@@ -37,11 +37,12 @@ export const getUserInfo = (token) => {
   })
 }
 
-export const logout = () => {
+export const logout = (restaurant) => {
   return axios.request({
     url: 'logout',
     timeout: 1000 * 60 * 2,
-    method: 'post'
+    method: 'post',
+    data: JSON.stringify({ 'restaurant': restaurant })
   })
 }
 
@@ -84,9 +85,7 @@ export const hasRead = msg_id => {
     url: 'message/has_read',
     method: 'post',
     timeout: 1000 * 60 * 2,
-    data: {
-      msg_id
-    }
+    data: JSON.stringify({ 'mag_id': msg_id })
   })
 }
 
@@ -95,10 +94,6 @@ export const alertmessage = (restaurant, msg_id, state) => {
     url: 'system/system/altermessage',
     method: 'post',
     timeout: 1000 * 60 * 2,
-    data: {
-      restaurant,
-      msg_id,
-      state
-    }
+    data: JSON.stringify({ 'restaurant': restaurant, 'msg_id': msg_id, 'state': state })
   })
 }

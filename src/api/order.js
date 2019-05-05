@@ -6,12 +6,7 @@ export const operateOrder = (order, restaurant, operate, reason) => {
     url: 'client/order/alertOrder',
     method: 'post',
     timeout: 1000 * 60 * 2,
-    data: {
-      order,
-      operate,
-      restaurant,
-      reason
-    }
+    data: JSON.stringify({ 'restaurant': restaurant, 'order': order, 'operate': operate, 'reason': reason })
   })
 }
 
@@ -72,3 +67,72 @@ export const getBar = (restaurant) => {
     }
   })
 }
+
+export const getMaterial = ({ restaurant, types }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/getMaterial',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant,
+      types
+    }
+  })
+}
+
+export const getSpecific = ({ restaurant, id }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/getSpecific',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant,
+      id
+    }
+  })
+}
+
+export const alertMaterial = ({ restaurant, id, save, count, name }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/alertMaterial',
+    method: 'post',
+    timeout: 1000 * 60 * 2,
+    data: JSON.stringify({ 'restaurant': restaurant, 'id': id, 'save': save, 'count': count, 'name': name })
+  })
+}
+
+export const checkName = ({ restaurant, name, type }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/checkName',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant,
+      name,
+      type
+    }
+  })
+}
+
+export const saveMaterial = ({ restaurant, name, type, count, save }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/saveMaterial',
+    method: 'post',
+    timeout: 1000 * 60 * 2,
+    data: JSON.stringify({ 'restaurant': restaurant, 'type': type, 'save': save, 'count': count, 'name': name })
+  })
+}
+
+export const deleteMaterial = ({ restaurant, id }) => {
+  return axios.request({
+    url: 'kitchen/kitchen/deleteMaterial',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant,
+      id
+    }
+  })
+}
+
+

@@ -73,7 +73,7 @@ export default [
         path: 'order_page',
         name: 'order_page',
         meta: {
-          icon: 'md-notifications',
+          icon: 'ios-basket',
           title: '订单中心'
         },
         component: () => import('@/view/single-page/order/index.vue')
@@ -93,7 +93,7 @@ export default [
         path: 'add',
         name: 'add_material',
         meta: {
-          icon: 'ios-hammer',
+          icon: 'ios-add',
           title: '添加物品'
         },
         component: () => import('@/view/materials/add.vue')
@@ -103,128 +103,38 @@ export default [
         name: 'inquire_material',
         meta: {
           icon: 'ios-hammer',
-          title: '查询物品'
+          title: '查询&修改物品信息'
         },
-        component: () => import('@/view/materials/inquire.vue')
+        component: () => import('@/view/materials/inquiry.vue')
       }
     ]
   },
   {
-    path: '/components',
-    name: 'components',
+    path: '/food',
+    name: 'food',
     meta: {
-      icon: 'logo-buffer',
-      title: '组件'
+      icon: 'logo-snapchat',
+      title: '菜单管理'
     },
     component: Main,
     children: [
       {
-        path: 'tree_select_page',
-        name: 'tree_select_page',
+        path: 'add',
+        name: 'add_food',
         meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '树状下拉选择'
+          icon: 'ios-add',
+          title: '添加菜单'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/food/add.vue')
       },
       {
-        path: 'count_to_page',
-        name: 'count_to_page',
+        path: 'update',
+        name: 'update_food',
         meta: {
-          icon: 'md-trending-up',
-          title: '数字渐变'
+          icon: 'ios-hammer',
+          title: '查询&修改菜单信息'
         },
-        component: () => import('@/view/components/count-to/count-to.vue')
-      },
-      {
-        path: 'drag_list_page',
-        name: 'drag_list_page',
-        meta: {
-          icon: 'ios-infinite',
-          title: '拖拽列表'
-        },
-        component: () => import('@/view/components/drag-list/drag-list.vue')
-      },
-      {
-        path: 'drag_drawer_page',
-        name: 'drag_drawer_page',
-        meta: {
-          icon: 'md-list',
-          title: '可拖拽抽屉'
-        },
-        component: () => import('@/view/components/drag-drawer')
-      },
-      {
-        path: 'org_tree_page',
-        name: 'org_tree_page',
-        meta: {
-          icon: 'ios-people',
-          title: '组织结构树'
-        },
-        component: () => import('@/view/components/org-tree')
-      },
-      {
-        path: 'tree_table_page',
-        name: 'tree_table_page',
-        meta: {
-          icon: 'md-git-branch',
-          title: '树状表格'
-        },
-        component: () => import('@/view/components/tree-table/index.vue')
-      },
-      {
-        path: 'cropper_page',
-        name: 'cropper_page',
-        meta: {
-          icon: 'md-crop',
-          title: '图片裁剪'
-        },
-        component: () => import('@/view/components/cropper/cropper.vue')
-      },
-      {
-        path: 'tables_page',
-        name: 'tables_page',
-        meta: {
-          icon: 'md-grid',
-          title: '多功能表格'
-        },
-        component: () => import('@/view/components/tables/tables.vue')
-      },
-      {
-        path: 'split_pane_page',
-        name: 'split_pane_page',
-        meta: {
-          icon: 'md-pause',
-          title: '分割窗口'
-        },
-        component: () => import('@/view/components/split-pane/split-pane.vue')
-      },
-      {
-        path: 'markdown_page',
-        name: 'markdown_page',
-        meta: {
-          icon: 'logo-markdown',
-          title: 'Markdown编辑器'
-        },
-        component: () => import('@/view/components/markdown/markdown.vue')
-      },
-      {
-        path: 'editor_page',
-        name: 'editor_page',
-        meta: {
-          icon: 'ios-create',
-          title: '富文本编辑器'
-        },
-        component: () => import('@/view/components/editor/editor.vue')
-      },
-      {
-        path: 'icons_page',
-        name: 'icons_page',
-        meta: {
-          icon: '_bear',
-          title: '自定义图标'
-        },
-        component: () => import('@/view/components/icons/icons.vue')
+        component: () => import('@/view/food/update.vue')
       }
     ]
   },
@@ -258,60 +168,31 @@ export default [
     ]
   },
   {
-    path: '/i18n',
-    name: 'i18n',
+    path: '/order',
+    name: 'order',
     meta: {
-      hideInBread: true
+      icon: 'logo-yen',
+      title: '订单管理'
     },
     component: Main,
     children: [
       {
-        path: 'i18n_page',
-        name: 'i18n_page',
+        path: 'inquiry',
+        name: 'order_inquiry',
         meta: {
-          icon: 'md-planet',
-          title: 'i18n - {{ i18n_page }}'
+          icon: 'md-stats',
+          title: '订单查询'
         },
-        component: () => import('@/view/i18n/i18n-page.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_store',
-    name: 'error_store',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
+        component: () => import('@/view/order/inquiry')
+      },
       {
-        path: 'error_store_page',
-        name: 'error_store_page',
+        path: 'export-excel',
+        name: 'export-excel',
         meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
+          icon: 'md-download',
+          title: '导出EXCEL'
         },
-        component: () => import('@/view/error-store/error-store.vue')
-      }
-    ]
-  },
-  {
-    path: '/error_logger',
-    name: 'error_logger',
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'error_logger_page',
-        name: 'error_logger_page',
-        meta: {
-          icon: 'ios-bug',
-          title: '错误收集'
-        },
-        component: () => import('@/view/single-page/error-logger.vue')
+        component: () => import('@/view/excel/export-excel.vue')
       }
     ]
   },
@@ -379,7 +260,7 @@ export default [
     path: '/argu',
     name: 'argu',
     meta: {
-      hideInMenu: true
+      hideInMenu: false
     },
     component: Main,
     children: [

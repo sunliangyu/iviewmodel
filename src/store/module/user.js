@@ -13,8 +13,24 @@ import {
   operateOrder,
   getHome,
   getPie,
-  getBar
+  getBar,
+  getMaterial,
+  getSpecific,
+  alertMaterial,
+  checkName,
+  saveMaterial,
+  deleteMaterial
 } from '@/api/order'
+
+import {
+  getfoodClass,
+  addFood,
+  getFoodsByClass,
+  deleteFoodById,
+  getFoodById,
+  updateFood
+} from '@/api/food'
+
 import { setToken, getToken } from '@/libs/util'
 
 export default {
@@ -134,7 +150,7 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout(state.restaurant).then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -290,7 +306,6 @@ export default {
       )
     },
     refuseOrders: function ({ commit, state }, { msg_id, reason }) {
-      alert(reason)
       const operate = 'c'
       const restaurant = state.restaurant
       return new Promise((resolve, reject) => {
@@ -331,15 +346,15 @@ export default {
           const unread = data.unread
           const receive = data.receive
           const refuse = data.refuse
-          commit('setOrderUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+          commit('setOrderUnreadList', unread)
           commit('setOrderReceiveList', receive.map(_ => {
             _.loading = false
             return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+          }))
           commit('setOrderRefuseList', refuse.map(_ => {
             _.loading = false
             return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+          }))
           resolve()
         }).catch(error => {
           reject(error)
@@ -370,6 +385,112 @@ export default {
         getBar(restaurant).then(res => {
           const data = res.data
           resolve(data)
+        })
+      })
+    },
+    getMaterial: ({ commit, state }, types) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getMaterial({ restaurant, types }).then(res => {
+          const data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getSpecific: ({ commit, state }, id) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getSpecific({ restaurant, id }).then(res => {
+          const data = res.data
+          resolve(data)
+        })
+      })
+    },
+    alertMaterial: ({ commit, state }, { id, save, count, name }) => {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        alertMaterial({ restaurant, id, save, count, name }).then(() => {
+          resolve()
+        })
+      })
+    },
+    checkName ({ commit, state }, { name, type }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        checkName({ restaurant, name, type }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    saveMaterial  ({ commit, state }, { name, type, count, save }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        saveMaterial({ restaurant, name, type, count, save }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+
+    deleteMaterial ({ commit, state }, { id }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        deleteMaterial({ restaurant, id }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+
+    getfoodClass ({ commit, state }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getfoodClass({ restaurant }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    addFoods ({ commit, state }, { type, food }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        addFood({ restaurant, type, food }).then((res) => {
+          resolve()
+        })
+      })
+    },
+    getFoodsByClass  ({ commit, state }, { type }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getFoodsByClass({ restaurant, type }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getFoodById ({ commit, state }, id) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getFoodById({ restaurant, id }).then((res) => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    deleteFoodById ({ commit, state }, { id }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        deleteFoodById({ restaurant, id }).then(() => {
+          resolve()
+        })
+      })
+    },
+    updateFood ({ commit, state }, { name, des, price, cost, add, dfood, id }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        updateFood({ restaurant, name, des, price, cost, add, dfood, id }).then(() => {
+          resolve()
         })
       })
     }
