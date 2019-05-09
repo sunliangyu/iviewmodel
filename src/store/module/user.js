@@ -19,7 +19,8 @@ import {
   alertMaterial,
   checkName,
   saveMaterial,
-  deleteMaterial
+  deleteMaterial,
+  orderpage
 } from '@/api/order'
 
 import {
@@ -28,7 +29,10 @@ import {
   getFoodsByClass,
   deleteFoodById,
   getFoodById,
-  updateFood
+  updateFood,
+  getImage,
+  addoutflow,
+  getMateFlow
 } from '@/api/food'
 
 import { setToken, getToken } from '@/libs/util'
@@ -338,6 +342,14 @@ export default {
         }
       })
     },
+    getOrderDetail: function ({ commit, state }, order) {
+      return new Promise((resolve, reject) => {
+        getOrderById(order, state.restaurant).then(res => {
+          const content = res.data
+          resolve(content)
+        })
+      })
+    },
     // 获取今天处理订单以及未处理订单
     getOrders: function ({ commit, state }, user_id) {
       return new Promise((resolve, reject) => {
@@ -491,6 +503,42 @@ export default {
       return new Promise((resolve, reject) => {
         updateFood({ restaurant, name, des, price, cost, add, dfood, id }).then(() => {
           resolve()
+        })
+      })
+    },
+    orderpage ({ commit, state }, { start, condition, quality, page }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        orderpage({ restaurant, start, condition, quality, page }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getImage ({ commit, state }, id) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getImage({ restaurant, start, condition, quality, page }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    addoutflow ({ commit, state }, { id, name, count, price, remark }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        addoutflow({ restaurant, id, name, count, price, remark }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getMateFlow ({ commit, state }, { time, id, page }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getMateFlow({ restaurant, id, time, page }).then(res => {
+          var data = res.data
+          resolve(data)
         })
       })
     }

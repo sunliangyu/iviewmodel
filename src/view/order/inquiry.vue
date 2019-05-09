@@ -1,170 +1,293 @@
 <template>
-  <Card shadow>
-    <row>
-      <i-select :model.sync="model1" style="width:200px" filterable @on-change="selectbutton" clearable="true">
-        <i-option v-for="item in cityList"  :key="item.id" :value="item.id">
-          {{ item.label }}
-        </i-option>
-      </i-select>
-      <i-select :model.sync="model1" style="width:200px"  @on-change="selectbutt"  filterable clearable="true">
-        <i-option v-for="item in cityLista"  :key="item.id" :value="item">
-          {{ item.label }}
-        </i-option>
-      </i-select>
-      <Modal
-        v-model="modal2"
-        title="确定删除该条数据吗？"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <p>{{this.name}}</p>
-      </Modal>
-    </row>
-    <div :style="divstyle">
-      <br>
-      <i-form  label-position="top" v-show="divshow === 1">
-        <Form-item label ="物品名">
-          <i-input :value="this.name"  readonly=true></i-input>
-        </Form-item>
-        <Form-item   label="物品数量">
-          <i-input :value="this.count" readonly=true></i-input>
-        </Form-item>
-        <Form-item label="物品保质期">
-          <i-input :value="this.save" readonly=true></i-input>
-        </Form-item>
-      </i-form>
-      <i-form  label-position="top" v-show="divshow === 0">
-        <Form-item label ="物品名">
-          <i-input v-model="newname"></i-input>
-        </Form-item>
-        <Form-item   label="物品数量">
-          <i-input v-model="newcount"></i-input>
-        </Form-item>
-        <Form-item label="物品保质期">
-          <i-input v-model="newsave"></i-input>
-        </Form-item>
-      </i-form>
-      <br>
-      <row>
-        <i-button type="primary" disabled="true" id="savebutton" @click="savebutton">保存</i-button>
-        <i-button type="primary"  id="button1"  @click="modelbutton()">修改</i-button>
-        <i-button type="primary"  id="delete"  @click="deletebutton()">删除</i-button>
-      </row>
-    </div>
-  </Card>
+  <div>
+    <Form  v-show="showform"   :label-width="400">
+      <FormItem label="开始日期">
+        <Row>
+          <Col span="11">
+            <FormItem >
+              <Date-picker
+                @on-change="handleChange"
+                type="daterange"
+                format="yyyy-MM-dd"
+                placeholder="请选择时间段"
+                placement="bottom-end">
+              </Date-picker>
+            </FormItem>
+          </Col>
+        </Row>
+      </FormItem>
+      <FormItem label="订单状态">
+        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+          <Checkbox
+          :indeterminate="indeterminate"
+          :value="checkAll"
+          @click.prevent.native="handleCheckAll(true)">全选</Checkbox>
+        </div>
+        <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+          <Checkbox label="b">接单</Checkbox>
+          <Checkbox label="c">拒单</Checkbox>
+          <Checkbox label="d">完成</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+      <FormItem label="订单性质">
+        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+          <Checkbox
+            :indeterminate="indeterminate1"
+            :value="checkAll1"
+            @click.prevent.native="handleCheckAll(false)">全选</Checkbox>
+        </div>
+        <CheckboxGroup v-model="checkAllGroup1" @on-change="checkAllGroupChange1">
+          <Checkbox label="Y">到店</Checkbox>
+          <Checkbox label="N">外卖</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="handleSubmit">查询</Button>
+        <Button @click="handleReset" style="margin-left: 8px">重置</Button>
+      </FormItem>
+    </Form>
+    <Form v-show="!showform"   :label-width="80">
+      <FormItem label="订单总收入">
+        <Icon type="md-thumbs-up" />
+        {{allprice}}元
+      </FormItem>
+      <FormItem>
+        <Table :columns="columns" :data="data"></Table>
+      </FormItem>
+      <FormItem>
+        <Modal
+          v-model="modal1"
+          title="订单信息"
+          @on-ok="saveadd"
+        >
+          <p>
+            订单号：{{id}}
+          </p>
+          <p>
+            价格：{{content.price}}
+          </p>
+          <p>
+            用餐地址：{{content.location}}
+          </p>
+          <p>
+            用餐人数：{{content.people}}
+          </p>
+          <p>
+            菜品：{{content.foods}}
+          </p>
+          <p v-show="modelshow">
+            拒单理由：{{content.reason}}
+          </p>
+        </Modal>
+        <Page :total="allpage" show-total="true" @on-change="pagchange"/>
+        <Button @click="returnback">返回上一层</Button>
+      </FormItem>
+    </Form>
+  </div>
 </template>
-
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   name: 'inquiry',
+  components: {},
   data () {
     return {
-      cityList: [
+      start: null,
+      indeterminate: false,
+      checkAll: true,
+      checkAllGroup: ['b', 'c', 'd'],
+      indeterminate1: false,
+      checkAll1: true,
+      checkAllGroup1: ['Y', 'N'],
+      showform: true,
+      showarray: [],
+      allpage: 0,
+      page: 0,
+      allprice: 0,
+      modelshow: false,
+      content: {
+        price: 0,
+        location: '',
+        foods: [],
+        people: 0
+      },
+      modal1: false,
+      foodid: null,
+      columns: [
         {
-          id: 'A',
-          label: '菜品原料'
+          title: '订单号',
+          key: 'id'
         },
         {
-          id: 'B',
-          label: '消耗品'
+          title: '创建时间',
+          key: 'time'
+        },
+        {
+          title: '状态(b 接单 c 拒单 d 完成)',
+          key: 'flow'
+        },
+        {
+          title: '性质(True 外卖 False 到店)',
+          key: 'flag'
+        },
+        {
+          title: 'Action',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.edit(params.index)
+                  }
+                }
+              }, '详情')
+            ])
+          }
         }
       ],
-      model1: '',
-      cityLista: [],
-      divstyle: 'display:none',
-      currenttype: '',
-      count: 0,
-      save: 0,
-      divshow: 1,
-      newname: '',
-      newcount: 0,
-      newsave: 0,
-      currentitem: null,
-      name: '',
-      modal2: false
+      data: []
     }
   },
   methods: {
-    ...mapMutations([
-      //
-    ]),
     ...mapActions([
-      'getMaterial',
-      'getSpecific',
-      'alertMaterial',
-      'deleteMaterial'
+      'orderpage',
+      'getOrderDetail'
     ]),
-    selectbutton (ids) {
-      if (ids != null) {
-        this.divstyle = 'display:none'
-        this.getMaterial(ids).then(res => {
-          this.cityLista = res
-          this.currenttype = ids
-        })
-      }
-    },
-    selectbutt (item) {
-      const ids = item.id
-      document.getElementById('savebutton').disabled = true
-      if (ids != null && (this.currentitem === null || item.id !== this.currentitem.id)) {
-        this.newname = item.label
-        this.name = item.label
-        this.divshow = 1
-        this.currentitem = item
-        this.getSpecific(ids).then(res => {
-          this.count = res.count
-          this.save = res.save
-          this.newcount = this.count
-          this.newsave = this.save
-        })
-        this.divstyle = 'display:'
-      }
-    },
-    modelbutton () {
-      this.divshow = 0
-      document.getElementById('savebutton').disabled = false
-      document.getElementById('delete').disabled = true
-    },
-    savebutton () {
-      if (this.name == this.newname && this.count == this.newcount && this.save == this.newsave) {
-        this.$Message.warning('数据没有修改')
-      } else {
-        const id = this.currentitem.id
-        const name = this.newname
-        const count = this.newcount
-        const save = this.newsave
-        this.alertMaterial({ id, save, count, name }).then(res => {
-          this.$Message.success('数据修改成功')
-          this.name = this.newname
-          this.count = this.newcount
-          this.save = this.newsave
+    handleCheckAll (bool) {
+      if (bool) {
+        if (this.indeterminate) {
+          this.checkAll = false
+        } else {
+          this.checkAll = !this.checkAll
         }
-        )
+        this.indeterminate = false
+
+        if (this.checkAll) {
+          this.checkAllGroup = ['b', 'c', 'd']
+        } else {
+          this.checkAllGroup = []
+        }
+      } else {
+        if (this.indeterminate1) {
+          this.checkAll1 = false
+        } else {
+          this.checkAll1 = !this.checkAll1
+        }
+        this.indeterminate1 = false
+
+        if (this.checkAll1) {
+          this.checkAllGroup1 = ['Y', 'N']
+        } else {
+          this.checkAllGroup1 = []
+        }
       }
     },
-    deletebutton () {
-      this.modal2 = true
+    checkAllGroupChange (data) {
+      if (data.length === 3) {
+        this.indeterminate = false
+        this.checkAll = true
+      } else if (data.length > 0) {
+        this.indeterminate = true
+        this.checkAll = false
+      } else {
+        this.indeterminate = false
+        this.checkAll = false
+      }
     },
-    ok () {
-      var id = this.currentitem.id
-      this.deleteMaterial({ id }).then(() => {
-        this.$Message.success('数据删除成功')
-        this.divstyle = 'display:none'
-        this.deleteById(id)
+    checkAllGroupChange1 (data) {
+      if (data.length === 2) {
+        this.indeterminate1 = false
+        this.checkAll1 = true
+      } else if (data.length > 0) {
+        this.indeterminate1 = true
+        this.checkAll1 = false
+      } else {
+        this.indeterminate1 = false
+        this.checkAll1 = false
+      }
+    },
+    handleReset () {
+      this.start = null
+      this.stop = null
+      this.indeterminate = false
+      this.checkAll = true
+      this.checkAllGroup = ['b', 'c', 'd']
+      this.indeterminate1 = false
+      this.checkAll1 = true
+      this.checkAllGroup1 = ['Y', 'N']
+    },
+    handleSubmit () {
+      if (this.checkAllGroup.length <= 0) {
+        this.$Message.warning('状态不能为空')
+      } else if (this.checkAllGroup1.length <= 0) {
+        this.$Message.warning('订单性质不能为空')
+      } else {
+        var start
+        if (this.start != null && this.start !== '') {
+          start = this.start
+        } else {
+          start = null
+        }
+        this.orderpage({ start: start, condition: this.checkAllGroup, quality: this.checkAllGroup1, page: null }).then(res => {
+          this.allpage = res.all
+          this.showarray[0] = res.page
+          this.allprice = res.input
+          this.data = this.showarray[0]
+          this.currentPage = 1
+          this.showform = false
+        })
+      }
+    },
+    handleChange (daterange) {
+      this.start = daterange
+    },
+    edit (index) {
+      this.foodid = this.data[index].id
+      if (this.data[index].flow == 'c') {
+        this.modelshow = true
+      } else {
+        this.modelshow = false
+      }
+      this.getOrderDetail(this.foodid).then(res => {
+        this.content = res
+        console.log(this.content)
+        this.modal1 = true
       })
     },
-    deleteById (id) {
-      for (j = 0, len = this.cityLista.length; j < len; j++) {
-        if (this.cityLista[j].id === id) {
-          this.$set(this.cityLista, j, null)
-          break
+    returnback () {
+      this.data = []
+      this.showarray = []
+      this.allpage = 0
+      this.showform = true
+    },
+    pagchange (id) {
+      if (this.currentPage !== id) {
+        var index = id - 1
+        if (this.showarray[index] == null) {
+          var start
+          if (this.start != null && this.start !== '') {
+            start = this.start
+          } else {
+            start = null
+          }
+          this.orderpage({ start: start, condition: this.checkAllGroup, quality: this.checkAllGroup1, page: index }).then(res => {
+            this.showarray[index] = res.page
+            this.data = res.page
+            this.currentPage = id
+          })
+        } else {
+          this.data = this.showarray[index]
+          this.currentPage = id
         }
       }
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

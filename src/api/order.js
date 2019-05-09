@@ -135,4 +135,11 @@ export const deleteMaterial = ({ restaurant, id }) => {
   })
 }
 
-
+export const orderpage = ({ restaurant, start, condition, quality, page }) => {
+  return axios.request({
+    url: 'client/order/orderpage',
+    method: 'post',
+    timeout: 1000 * 60 * 2,
+    data: JSON.stringify({ 'restaurant': restaurant, 'start': start, 'condition': condition, 'quality': quality, 'page': page })
+  })
+}

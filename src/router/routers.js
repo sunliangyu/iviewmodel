@@ -135,6 +135,15 @@ export default [
           title: '查询&修改菜单信息'
         },
         component: () => import('@/view/food/update.vue')
+      },
+      {
+        path: 'image',
+        name: '图片管理',
+        meta: {
+          icon: 'ios-hammer',
+          title: '菜单图片管理'
+        },
+        component: () => import('@/view/food/image.vue')
       }
     ]
   },
@@ -183,16 +192,36 @@ export default [
           icon: 'md-stats',
           title: '订单查询'
         },
-        component: () => import('@/view/order/inquiry')
+        component: () => import('@/view/order/inquiry.vue')
+      }
+    ]
+  },
+  {
+    path: '/output',
+    name: 'output',
+    meta: {
+      icon: 'logo-yen',
+      title: '物品支出管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'add',
+        name: 'output_add',
+        meta: {
+          icon: 'ios-add',
+          title: '物品支出添加'
+        },
+        component: () => import('@/view/output/add.vue')
       },
       {
-        path: 'export-excel',
-        name: 'export-excel',
+        path: 'in',
+        name: 'output_in',
         meta: {
-          icon: 'md-download',
-          title: '导出EXCEL'
+          icon: 'md-stats',
+          title: '物品支出查询'
         },
-        component: () => import('@/view/excel/export-excel.vue')
+        component: () => import('@/view/output/inquiry.vue')
       }
     ]
   },

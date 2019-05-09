@@ -29,5 +29,8 @@ export default {
   update_food: '查询更新菜单',
   delete_food: '删除菜单',
   order_inquiry: '订单查询',
-  order: '订单管理'
+  order: '订单管理',
+  output: '支出管理',
+  output_add: '支出增加',
+  output_in: '支出查询'
 }
