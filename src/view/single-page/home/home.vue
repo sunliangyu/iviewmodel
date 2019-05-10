@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row :gutter="20">
+    <Row ref="lll" :gutter="20">
       <i-col :xs="12" :md="8" :lg="4" v-for="(infor, i) in inforCardData" :key="`infor-${i}`" style="height: 120px;padding-bottom: 10px;">
         <infor-card shadow :color="infor.color" :icon="infor.icon" :icon-size="36">
           <count-to :end="infor.count" count-class="count-style"/>
@@ -19,11 +19,6 @@
           <chart-bar style="height: 300px;" :value="barData" text="每周订单量"/>
         </Card>
       </i-col>
-    </Row>
-    <Row>
-      <Card shadow>
-        <example style="height: 310px;"/>
-      </Card>
     </Row>
   </div>
 </template>
@@ -50,7 +45,8 @@ export default {
         { title: '今日收入金额', icon: 'md-help-circle', count: 0, color: '#ff9900' },
         { title: '今日已接订单', icon: 'md-share', count: 0, color: '#ed3f14' },
         { title: '今日已拒订单', icon: 'md-chatbubbles', count: 0, color: '#E46CBB' },
-        { title: '今日未处理订单', icon: 'md-map', count: 0, color: '#9A66E4' }
+        { title: '今日未处理订单', icon: 'md-map', count: 0, color: '#9A66E4' },
+        { title: '今日已完成', icon: 'md-help-circle', count: 0, color: '#9A66E4' }
       ],
       barData: {
       },
@@ -73,6 +69,7 @@ export default {
         this.inforCardData[2].count = res.receive
         this.inforCardData[3].count = res.refuse
         this.inforCardData[4].count = res.nodo
+        this.inforCardData[5].count = res.did
       })
       this.hasread = true
     }

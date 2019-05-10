@@ -61,7 +61,7 @@
           @on-ok="saveadd"
         >
           <p>
-            订单号：{{id}}
+            订单号：{{foodid}}
           </p>
           <p>
             价格：{{content.price}}
@@ -268,24 +268,22 @@ export default {
       this.showform = true
     },
     pagchange (id) {
-      if (this.currentPage !== id) {
-        var index = id - 1
-        if (this.showarray[index] == null) {
-          var start
-          if (this.start != null && this.start !== '') {
-            start = this.start
-          } else {
-            start = null
-          }
-          this.orderpage({ start: start, condition: this.checkAllGroup, quality: this.checkAllGroup1, page: index }).then(res => {
-            this.showarray[index] = res.page
-            this.data = res.page
-            this.currentPage = id
-          })
+      var index = id - 1
+      if (this.showarray[index] == null) {
+        var start
+        if (this.start != null && this.start !== '') {
+          start = this.start
         } else {
-          this.data = this.showarray[index]
-          this.currentPage = id
+          start = null
         }
+        this.orderpage({ start: start, condition: this.checkAllGroup, quality: this.checkAllGroup1, page: index }).then(res => {
+          this.showarray[index] = res.page
+          this.data = res.page
+          this.currentPage = id
+        })
+      } else {
+        this.data = this.showarray[index]
+        this.currentPage = id
       }
     }
   }

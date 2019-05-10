@@ -90,10 +90,19 @@ export default {
     }
   },
   mounted () {
-    console.log('start')
+    console.log('111')
+    console.log(this.$refs['upload'])
+    // this.uploadList = this.$refs.upload.fileList
+    this.$nextTick(() => {
+      console.log('start2')
+      console.log(this.$refs)
+      console.log(this.$refs.upload)
+    })
+  },
+  created () {
+    console.log('start111')
     console.log(this.$refs)
     console.log(this.$refs.upload)
-    this.uploadList = this.$refs.upload.fileList
   }
 }
 </script>

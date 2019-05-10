@@ -32,5 +32,10 @@ export default {
   order: '订单管理',
   output: '支出管理',
   output_add: '支出增加',
-  output_in: '支出查询'
+  output_in: '支出查询',
+  pay: '收款管理',
+  pay_inquiry: '收款',
+  kitchen_code: '后厨订单制作',
+  kitchen_ready: '后厨订单准备',
+  kitchen: '后厨订单制作'
 }

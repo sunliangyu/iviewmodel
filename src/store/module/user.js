@@ -1,6 +1,6 @@
 import {
   login,
-  logout,
+  // logout,
   getUserInfo,
   getMessage,
   getContentByMsgId,
@@ -20,7 +20,9 @@ import {
   checkName,
   saveMaterial,
   deleteMaterial,
-  orderpage
+  orderpage,
+  inquiryOrder,
+  topay
 } from '@/api/order'
 
 import {
@@ -32,7 +34,11 @@ import {
   updateFood,
   getImage,
   addoutflow,
-  getMateFlow
+  getMateFlow,
+  getFoods,
+  getcodepage,
+  getNeed,
+  updateorder
 } from '@/api/food'
 
 import { setToken, getToken } from '@/libs/util'
@@ -141,10 +147,10 @@ export default {
         }).then(res => {
           const data = res.data
           if (data.token == null) {
-            resolve()
+            resolve(null)
           } else {
             commit('setToken', data.token)
-            resolve()
+            resolve('true')
           }
         }).catch(err => {
           reject(err)
@@ -153,15 +159,18 @@ export default {
     },
     // 退出登录
     handleLogOut ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        logout(state.restaurant).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
-      })
+      commit('setToken', '')
+      commit('setAccess', [])
+      // return new Promise((resolve, reject) => {
+      //
+      //   // logout(state.restaurant).then(() => {
+      //   //   commit('setToken', '')
+      //   //   commit('setAccess', [])
+      //   //   resolve()
+      //   // }).catch(err => {
+      //   //   reject(err)
+      //   // })
+      // })
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
@@ -539,6 +548,58 @@ export default {
         getMateFlow({ restaurant, id, time, page }).then(res => {
           var data = res.data
           resolve(data)
+        })
+      })
+    },
+    inquiryOrder ({ commit, state }, { type, id }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        inquiryOrder({ type, id, restaurant }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    topay ({ commit, state }, { pay, id, price }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        topay({ restaurant, pay, id, price }).then(res => {
+          resolve()
+        })
+      })
+    },
+    getFoods ({ commit, state }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getFoods({ restaurant }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getcodepage ({ commit, state }, { page, status, id }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getcodepage({ restaurant, page, id, state: status }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    getNeed ({ commit, state }, id) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        getNeed({ restaurant, id }).then(res => {
+          var data = res.data
+          resolve(data)
+        })
+      })
+    },
+    updateorder ({ commit, state }, { id, order, status }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        updateorder({ restaurant, id, order, state: status }).then(res => {
+          resolve()
         })
       })
     }

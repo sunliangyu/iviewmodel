@@ -1,5 +1,4 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -148,35 +147,6 @@ export default [
     ]
   },
   {
-    path: '/excel',
-    name: 'excel',
-    meta: {
-      icon: 'ios-stats',
-      title: 'EXCEL导入导出'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'upload-excel',
-        name: 'upload-excel',
-        meta: {
-          icon: 'md-add',
-          title: '导入EXCEL'
-        },
-        component: () => import('@/view/excel/upload-excel.vue')
-      },
-      {
-        path: 'export-excel',
-        name: 'export-excel',
-        meta: {
-          icon: 'md-download',
-          title: '导出EXCEL'
-        },
-        component: () => import('@/view/excel/export-excel.vue')
-      }
-    ]
-  },
-  {
     path: '/order',
     name: 'order',
     meta: {
@@ -226,62 +196,52 @@ export default [
     ]
   },
   {
-    path: '/multilevel',
-    name: 'multilevel',
+    path: '/pay',
+    name: 'pay',
     meta: {
-      icon: 'md-menu',
-      title: '多级菜单'
+      icon: 'ios-chatbubbles',
+      title: '支付管理'
     },
     component: Main,
     children: [
       {
-        path: 'level_2_1',
-        name: 'level_2_1',
+        path: 'inquiry',
+        name: 'pay_inquiry',
         meta: {
-          icon: 'md-funnel',
-          title: '二级-1'
+          icon: 'ios-add',
+          title: '支付查询'
         },
-        component: () => import('@/view/multilevel/level-2-1.vue')
+        component: () => import('@/view/pay/pay.vue')
+      }
+    ]
+  },
+
+  {
+    path: '/kitchen',
+    name: 'kitchen',
+    meta: {
+      icon: 'ios-chatbubbles',
+      title: '后厨订单处理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'ready',
+        name: 'kitchen_ready',
+        meta: {
+          icon: 'ios-add',
+          title: '后厨订单处理'
+        },
+        component: () => import('@/view/kitchen/ready.vue')
       },
       {
-        path: 'level_2_2',
-        name: 'level_2_2',
+        path: 'code',
+        name: 'kitchen_code',
         meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
+          icon: 'ios-add',
+          title: '后厨订单制作'
         },
-        component: parentView,
-        children: [
-          {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
-          },
-          {
-            path: 'level_2_2_2',
-            name: 'level_2_2_2',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
-          }
-        ]
-      },
-      {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        component: () => import('@/view/kitchen/code.vue')
       }
     ]
   },

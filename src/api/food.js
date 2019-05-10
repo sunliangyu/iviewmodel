@@ -96,3 +96,57 @@ export const getMateFlow = ({ restaurant, time, id, page }) => {
     }
   )
 }
+
+export const getFoods = ({ restaurant }) => {
+  return axios.request(
+    {
+      url: 'kitchen/food/getfoods',
+      method: 'get',
+      timeout: 1000 * 60 * 2,
+      params: {
+        restaurant
+      }
+    }
+  )
+}
+
+export const getcodepage = ({ restaurant, page, id, state }) => {
+  return axios.request(
+    {
+      url: 'kitchen/food/getcodepage',
+      method: 'get',
+      timeout: 1000 * 60 * 2,
+      params: {
+        restaurant,
+        page,
+        id,
+        state
+      }
+    }
+  )
+}
+
+export const getNeed = ({ restaurant, id }) => {
+  return axios.request(
+    {
+      url: 'kitchen/food/getNeed',
+      method: 'get',
+      timeout: 1000 * 60 * 2,
+      params: {
+        restaurant,
+        id
+      }
+    }
+  )
+}
+
+export const updateorder = ({ restaurant, id, order, state }) => {
+  return axios.request(
+    {
+      url: 'kitchen/food/updateorder',
+      method: 'post',
+      timeout: 1000 * 60 * 2,
+      data: JSON.stringify({ 'restaurant': restaurant, 'order': order, 'state': state, 'id': id })
+    }
+  )
+}

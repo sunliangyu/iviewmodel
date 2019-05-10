@@ -29,11 +29,15 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+        if (res == null) {
+          alert('密码或账户错误')
+        } else {
+          this.getUserInfo().then(res => {
+            this.$router.push({
+              name: this.$config.homeName
+            })
           })
-        })
+        }
       })
     }
   }

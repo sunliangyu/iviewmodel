@@ -143,3 +143,24 @@ export const orderpage = ({ restaurant, start, condition, quality, page }) => {
     data: JSON.stringify({ 'restaurant': restaurant, 'start': start, 'condition': condition, 'quality': quality, 'page': page })
   })
 }
+export const inquiryOrder = ({ restaurant, type, id }) => {
+  return axios.request({
+    url: 'client/order/inquiryOrder',
+    method: 'get',
+    timeout: 1000 * 60 * 2,
+    params: {
+      restaurant,
+      type,
+      id
+    }
+  })
+}
+
+export const topay = ({ restaurant, pay, id, price }) => {
+  return axios.request({
+    url: 'client/order/pay',
+    method: 'post',
+    timeout: 1000 * 60 * 2,
+    data: JSON.stringify({ 'restaurant': restaurant, 'pay': pay, 'id': id, 'price': price })
+  })
+}

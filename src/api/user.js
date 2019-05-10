@@ -15,7 +15,6 @@ export const registry = ({ username, password }) => {
 }
 
 export const login = ({ username, password }) => {
-  console.log(axios)
   return axios.request({
     url: 'system/system/login',
     data: JSON.stringify({ 'username': username, 'password': password }),
