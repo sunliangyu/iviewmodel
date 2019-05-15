@@ -38,7 +38,8 @@ import {
   getFoods,
   getcodepage,
   getNeed,
-  updateorder
+  updateorder,
+  alertImage
 } from '@/api/food'
 
 import { setToken, getToken } from '@/libs/util'
@@ -527,7 +528,7 @@ export default {
     getImage ({ commit, state }, id) {
       var restaurant = state.restaurant
       return new Promise((resolve, reject) => {
-        getImage({ restaurant, start, condition, quality, page }).then(res => {
+        getImage({ restaurant, id }).then(res => {
           var data = res.data
           resolve(data)
         })
@@ -599,6 +600,14 @@ export default {
       var restaurant = state.restaurant
       return new Promise((resolve, reject) => {
         updateorder({ restaurant, id, order, state: status }).then(res => {
+          resolve()
+        })
+      })
+    },
+    alertImage ({ commit, state }, { id, add, deletes }) {
+      var restaurant = state.restaurant
+      return new Promise((resolve, reject) => {
+        alertImage({ restaurant, id, add, deletes }).then(res => {
           resolve()
         })
       })

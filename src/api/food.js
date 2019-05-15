@@ -150,3 +150,14 @@ export const updateorder = ({ restaurant, id, order, state }) => {
     }
   )
 }
+
+export const alertImage = ({ restaurant, id, add, deletes }) => {
+  return axios.request(
+    {
+      url: 'kitchen/food/alertImage',
+      method: 'post',
+      timeout: 1000 * 60 * 2,
+      data: JSON.stringify({ 'restaurant': restaurant, 'add': add, 'deletes': deletes, 'id': id })
+    }
+  )
+}

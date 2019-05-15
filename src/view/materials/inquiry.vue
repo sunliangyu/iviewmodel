@@ -2,10 +2,10 @@
   <Card shadow>
     <row>
       <i-select :model.sync="model1" style="width:200px" filterable @on-change="selectbutton" clearable="true">
-        <i-option v-for="item in cityList"  :key="item.id" :value="item.id">
-          {{ item.label }}
-        </i-option>
-      </i-select>
+      <i-option v-for="item in cityList"  :key="item.id" :value="item.id">
+        {{ item.label }}
+      </i-option>
+    </i-select>
       <i-select :model.sync="model1" style="width:200px"  @on-change="selectbutt"  filterable clearable="true">
         <i-option v-for="item in cityLista"  :key="item.id" :value="item">
           {{ item.label }}

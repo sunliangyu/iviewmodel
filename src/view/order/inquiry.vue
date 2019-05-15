@@ -1,3 +1,4 @@
+<script src="../../api/order.js"></script>
 <template>
   <div>
     <Form  v-show="showform"   :label-width="400">
