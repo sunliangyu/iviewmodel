@@ -72,7 +72,6 @@ export default {
     },
     savebutton () {
       var name = this.name.trim()
-      this.name = null
       var type = this.currenttype
       var count = this.count
       var save = this.save
@@ -81,7 +80,7 @@ export default {
       } else {
         this.checkName({ name, type }).then(res => {
           if (res === false) {
-            alert(this.name + '已经使用，请重新填写')
+            alert(name + '已经使用，请重新填写')
             this.name = null
           } else {
             this.saveMaterial({ name, type, count, save }).then(res => {

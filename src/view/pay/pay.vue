@@ -33,7 +33,7 @@
         @on-cancel="cancel">
         <Select v-model="payflag" placeholder="请选择付款方式">
           <Option value="true">在线支付</Option>
-          <Option value="false">现金支出</Option>
+          <Option value="false">现金支付</Option>
         </Select>
       </Modal>
       <FormItem  v-show="buttonshow">
@@ -153,7 +153,6 @@ export default {
       } else {
         payflag = false
       }
-      alert(this.currentId)
       this.topay({ id: this.currentId, pay: payflag, price: this.allprice }).then(res => {
         this.$Message.success('收款成功')
         this.returnback()

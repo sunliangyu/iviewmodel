@@ -135,6 +135,7 @@ export default {
       this.currentcount = null
     },
     selectmater (item) {
+      alert(item.id)
       this.currentma = item.id
       this.currentname = item.label
     },
@@ -167,7 +168,9 @@ export default {
             this.currentma = null
             this.data1 = []
             this.$Message.success(this.addFood.name + '添加成功!')
-            this.addFood = {}
+            this.addFood.need = []
+            this.addFood.name = null
+            this.addFood.desc = null
           })
         } else {
           this.$Message.error('Fail!')

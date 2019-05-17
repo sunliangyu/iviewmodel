@@ -47,7 +47,7 @@
           <Icon type="ios-camera" size="20"></Icon>
         </div>
       </Upload>
-      <Modal title="View Image" v-model="visible">
+      <Modal title="Big Image" v-model="visible">
         <img :src="'http://localhost:8779/image/' + imgName " v-if="visible" style="width: 100%">
       </Modal>
       <Modal
@@ -121,13 +121,8 @@ export default {
     handleSuccess (res, file) {
       var url = res.url
       if (url != null) {
-        file.url = url
-        file.name = url
+        this.uploadList.push({ 'name': url, 'url': url, 'status': 'finished' })
         this.add.push(url)
-        console.log('uploadList')
-        console.log(this.uploadList)
-        console.log('uploadList')
-        console.log(this.uploadList)
       } else {
         this.$Message.warning('上传失败')
       }
@@ -200,8 +195,6 @@ export default {
           this.$Message.success('保存成功')
           this.add = []
           this.delete = []
-          alert('ad' + this.add.length)
-          alert('delete' + this.delete.length)
           var len = this.$refs.upload.fileList.length
           this.$refs.upload.fileList.splice(0, len)
         })
@@ -238,6 +231,7 @@ export default {
   },
   mounted () {
     this.uploadList = this.$refs.upload.fileList
+    console.log(this.uploadList)
     this.getfoodClass().then(res => {
       this.foodclass = res
     })
